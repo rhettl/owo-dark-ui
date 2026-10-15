@@ -1,0 +1,103 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.rhettl",
+    "module": "owo-dark-ui",
+    "version": "0.1.0-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.14.3"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "owo-dark-ui-0.1.0-SNAPSHOT.jar",
+          "url": "owo-dark-ui-0.1.0-SNAPSHOT.jar",
+          "size": 69449,
+          "sha512": "cb2b1c6dd28ebd729e7af0c6d99f43aab9794fe69ca135424ada8f47f4923062e67769fa91d4cee431377b9bcebf6f1842df297f0dffec6dfefc56169eddf560",
+          "sha256": "788c1155d1266dac8a28ff6212f8047173f8b16e2f5d12ab8046914adcea6296",
+          "sha1": "011d987bfb057b84b94eadd2aa941db76d637cca",
+          "md5": "09f3452d4b462d4a82fd38e491ca6999"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 21,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "net.fabricmc",
+          "module": "fabric-loader",
+          "version": {
+            "requires": "0.18.0"
+          }
+        },
+        {
+          "group": "net.fabricmc.fabric-api",
+          "module": "fabric-api",
+          "version": {
+            "requires": "0.116.9+1.21.1"
+          }
+        },
+        {
+          "group": "io.wispforest",
+          "module": "owo-lib",
+          "version": {
+            "requires": "0.12.15+1.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "owo-dark-ui-0.1.0-SNAPSHOT.jar",
+          "url": "owo-dark-ui-0.1.0-SNAPSHOT.jar",
+          "size": 69449,
+          "sha512": "cb2b1c6dd28ebd729e7af0c6d99f43aab9794fe69ca135424ada8f47f4923062e67769fa91d4cee431377b9bcebf6f1842df297f0dffec6dfefc56169eddf560",
+          "sha256": "788c1155d1266dac8a28ff6212f8047173f8b16e2f5d12ab8046914adcea6296",
+          "sha1": "011d987bfb057b84b94eadd2aa941db76d637cca",
+          "md5": "09f3452d4b462d4a82fd38e491ca6999"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "owo-dark-ui-0.1.0-SNAPSHOT-sources.jar",
+          "url": "owo-dark-ui-0.1.0-SNAPSHOT-sources.jar",
+          "size": 35225,
+          "sha512": "b637d466985db0bed2ce62a214ddeb27a34cf5537b0b66a442c9a37ea02bc62a7c47943478abc17aa7c82ec43fc400ca848b4d91ade8440826bffa9d58a5fec9",
+          "sha256": "ae029fd54a39a9e75e28db9a7ab209c2fe0a13f9ab1387a8096f35f3a0f2551c",
+          "sha1": "15282c983cb04323e07273f91ae337e56e952498",
+          "md5": "f47097e0d2f0e9492ecc54c03c2bb60b"
+        }
+      ]
+    }
+  ]
+}
