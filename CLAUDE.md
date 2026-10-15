@@ -13,7 +13,9 @@ to bca-crests so composite builds work).
   `Themes` (active theme).
 - `client/widget/`: components. They read `Themes` while drawing; never hard-code colors.
 - `client/playground/`: playground screen, tab interface, registry, and the library's own tabs.
-- `client/resources/assets/rhettl-owo-dark-ui/`: nine-patch definitions and skin PNGs.
+- `main/resources/assets/rhettl-owo-dark-ui/`: nine-patch definitions and skin PNGs. Keep assets in
+  `main`, beside `fabric.mod.json`: consumers' Loom dev runs split this jar by environment
+  and serve resources only from the half that holds `fabric.mod.json`.
 
 ## Conventions
 

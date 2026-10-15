@@ -5,6 +5,10 @@ while the version is `0.x`, minor versions may break the API.
 
 ## [Unreleased]
 
+### Fixed
+- Frame and well borders were missing in consumers' development runs. Assets now ship in the
+  main source set, beside `fabric.mod.json`.
+
 ## [0.1.0]
 
 First release, extracted from the BCA CobbleCrests UI playground.
