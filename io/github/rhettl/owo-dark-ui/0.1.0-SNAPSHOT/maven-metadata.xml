@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>io.github.rhettl</groupId>
+  <artifactId>owo-dark-ui</artifactId>
+  <versioning>
+    <lastUpdated>20261015054622</lastUpdated>
+    <snapshot>
+      <timestamp>20261015.054622</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.1.0-20261015.054622-1</value>
+        <updated>20261015054622</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>0.1.0-20261015.054622-1</value>
+        <updated>20261015054622</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.1.0-20261015.054622-1</value>
+        <updated>20261015054622</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>module</extension>
+        <value>0.1.0-20261015.054622-1</value>
+        <updated>20261015054622</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+  <version>0.1.0-SNAPSHOT</version>
+</metadata>
