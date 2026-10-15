@@ -14,6 +14,66 @@ scales.
 
 Extracted from [BCA CobbleCrests](https://github.com/strikeknight57/bca-crests).
 
+## Installation
+
+Releases and snapshots are published to a public Maven repository on GitHub
+Pages, https://rhettl.github.io/owo-dark-ui/. No token or credentials needed.
+
+**1. Add the repositories** (`build.gradle.kts`):
+
+```kotlin
+repositories {
+    maven("https://maven.wispforest.io/releases/")        // owo-lib
+    maven("https://rhettl.github.io/owo-dark-ui/") {
+        content { includeGroup("io.github.rhettl") }      // only look here for this library
+    }
+}
+```
+
+**2. Add the dependencies.** `include` bundles the library inside your jar
+(jar-in-jar), so players do not install it separately. owo-lib is not bundled;
+players install it, or your mod bundles `owo-sentinel`.
+
+```kotlin
+dependencies {
+    modImplementation("io.wispforest:owo-lib:0.12.15+1.21")
+    include(modImplementation("io.github.rhettl:owo-dark-ui:0.1.0-SNAPSHOT")!!)
+}
+```
+
+<details>
+<summary>Groovy (<code>build.gradle</code>)</summary>
+
+```groovy
+repositories {
+    maven { url "https://maven.wispforest.io/releases/" }
+    maven {
+        url "https://rhettl.github.io/owo-dark-ui/"
+        content { includeGroup "io.github.rhettl" }
+    }
+}
+
+dependencies {
+    modImplementation "io.wispforest:owo-lib:0.12.15+1.21"
+    include(modImplementation("io.github.rhettl:owo-dark-ui:0.1.0-SNAPSHOT"))
+}
+```
+</details>
+
+**3. Declare it in `fabric.mod.json`** with a bounded range (see
+[Versions across mods](#versions-across-mods)):
+
+```json
+"depends": {
+    "owo-lib": ">=0.12.15",
+    "rhettl-owo-dark-ui": "0.1.x"
+}
+```
+
+**Which version?** `0.1.0-SNAPSHOT` follows the latest `main` build. For a
+release of your own mod, use a tagged version such as `0.1.0` (listed on the
+[repository page](https://rhettl.github.io/owo-dark-ui/)).
+
 ## Components
 
 | Class | What it builds |
@@ -58,8 +118,7 @@ Commands.literal("mymod").then(Commands.literal("playground")
     }));
 ```
 
-3. Add `"rhettl-owo-dark-ui": "0.1.x"` to `depends` in your `fabric.mod.json`
-   (see [Versions across mods](#versions-across-mods)).
+3. Install the library as described in [Installation](#installation).
 
 Ordering: Fabric does not guarantee which mod's client initializer runs first. That
 is fine here: `Themes.set` and `PlaygroundTabs.register` only store values, and
@@ -233,26 +292,7 @@ This always wins, regardless of mod load order.
 above mods, so this is reliable for packs. Do not do it from a mod: when two mods
 ship the same path, load order decides which one wins.
 
-## Using it in a project
-
-Releases and snapshots are published to a Maven repository on GitHub Pages,
-https://rhettl.github.io/owo-dark-ui/. It is public and needs no token or
-credentials.
-
-```kotlin
-repositories {
-    maven("https://maven.wispforest.io/releases/")
-    maven("https://rhettl.github.io/owo-dark-ui/") {
-        content { includeGroup("io.github.rhettl") }
-    }
-}
-
-dependencies {
-    modImplementation("io.wispforest:owo-lib:0.12.15+1.21")
-    // include = jar-in-jar, so players do not install the library separately
-    include(modImplementation("io.github.rhettl:owo-dark-ui:0.1.0-SNAPSHOT")!!)
-}
-```
+## Using it from other projects
 
 ### Developing against a local checkout
 
