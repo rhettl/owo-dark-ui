@@ -19,3 +19,4 @@ First release, extracted from the BCA CobbleCrests UI playground.
 - Playground: `PlaygroundScreen`, `PlaygroundTab`, `PlaygroundTabs` for other mods' tabs, the
   `InventoryOnlyMenu`-backed `Playground.open`, and the Frames & Tabs, Inventory, List Well,
   and Theme pages. The library registers no commands; consumers open the playground.
+- Published to a public Maven repository on GitHub Pages, https://rhettl.github.io/owo-dark-ui/.

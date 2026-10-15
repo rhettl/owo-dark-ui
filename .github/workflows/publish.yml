@@ -1,17 +1,29 @@
-name: Publish to GitHub Packages
+name: Publish Maven to GitHub Pages
+
+# Builds, tests, and publishes the jar into a Maven repository kept on the
+# gh-pages branch, which GitHub Pages serves at https://<owner>.github.io/<repo>/.
+# Uses only the built-in GITHUB_TOKEN; consumers need no credentials.
+#
+#   push to main  -> <mod_version>-SNAPSHOT
+#   tag v1.2.3    -> 1.2.3
+#   manual run    -> as for the selected ref
 
 on:
   push:
-    branches: [main]         # publishes a SNAPSHOT on every main-branch push
-    tags: ['v*']             # publishes a release on version tags (e.g. v1.0.0)
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write   # push to gh-pages
+
+concurrency:
+  group: pages-maven   # one writer at a time; never drop a release
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - uses: actions/checkout@v4
 
@@ -28,18 +40,62 @@ jobs:
         id: version
         run: |
           BASE=$(grep '^mod_version' gradle.properties | cut -d= -f2 | tr -d ' ')
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            # Release: strip the leading 'v' from the tag (v1.0.0 → 1.0.0)
-            VERSION="${{ github.ref_name }}"
-            VERSION="${VERSION#v}"
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
           else
-            # Snapshot: append -SNAPSHOT to the property value
             VERSION="${BASE}-SNAPSHOT"
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Publish
-        run: ./gradlew build publish -Pmod_version=${{ steps.version.outputs.version }}
+      - name: Check out the gh-pages Maven repository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
+        run: |
+          REMOTE="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads "$REMOTE" gh-pages >/dev/null; then
+            git clone --depth 1 --branch gh-pages "$REMOTE" pages
+          else
+            # First publish: start an empty branch.
+            git init -b gh-pages pages
+            git -C pages remote add origin "$REMOTE"
+          fi
+          # Serve files as-is; Jekyll would hide some paths.
+          touch pages/.nojekyll
+
+      - name: Build, test, and publish into it
+        run: >
+          ./gradlew build publishMavenJavaPublicationToPagesMavenRepository
+          -Pmod_version=${{ steps.version.outputs.version }}
+          -PpagesMavenDir=${{ github.workspace }}/pages
+
+      - name: Write the index page
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER}"; REPO="${GITHUB_REPOSITORY#*/}"
+          URL="https://${OWNER}.github.io/${REPO}/"
+          {
+            echo "<!doctype html><meta charset=utf-8><title>${REPO} Maven</title>"
+            echo "<h1>${REPO} Maven repository</h1>"
+            echo "<pre>repositories { maven(\"${URL}\") }</pre>"
+            echo "<p>Source: <a href=\"https://github.com/${GITHUB_REPOSITORY}\">${GITHUB_REPOSITORY}</a></p><h2>Versions</h2><ul>"
+            find pages -name maven-metadata.xml -not -path '*-SNAPSHOT/*' | sort | while read -r meta; do
+              dir=$(dirname "${meta#pages/}")
+              group=$(dirname "$dir"); group="${group//\//.}"; artifact=$(basename "$dir")
+              grep -o '<version>[^<]*</version>' "$meta" | sed 's/<[^>]*>//g' | sort -rV | while read -r v; do
+                echo "<li><code>${group}:${artifact}:${v}</code></li>"
+              done
+            done
+            echo "</ul>"
+          } > pages/index.html
+
+      - name: Push to gh-pages
+        run: |
+          cd pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to publish."
+          else
+            git commit -q -m "Publish ${{ steps.version.outputs.version }} from ${GITHUB_SHA::7}"
+            git push origin gh-pages
+          fi

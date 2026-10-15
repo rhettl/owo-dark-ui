@@ -8,8 +8,8 @@
 		"RhettL"
 	],
 	"contact": {
-		"sources": "https://github.com/rhettl/owo-ui-components",
-		"issues": "https://github.com/rhettl/owo-ui-components/issues"
+		"sources": "https://github.com/rhettl/owo-dark-ui",
+		"issues": "https://github.com/rhettl/owo-dark-ui/issues"
 	},
 	"license": "MIT",
 	"environment": "*",

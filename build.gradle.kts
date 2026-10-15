@@ -99,14 +99,12 @@ publishing {
 	repositories {
 		mavenLocal()
 
-		// GitHub Packages: SNAPSHOTs from main and releases from v* tags (see .github/workflows/publish.yml).
+		// A plain Maven layout in a directory. CI points it at a checkout of the
+		// gh-pages branch, which GitHub Pages serves at https://rhettl.github.io/owo-dark-ui/
+		// (see .github/workflows/publish.yml). Locally it defaults to build/pages-maven.
 		maven {
-			name = "GitHubPackages"
-			url = uri("https://maven.pkg.github.com/${findProperty("gpr.owner") ?: System.getenv("GITHUB_REPOSITORY_OWNER") ?: "rhettl"}/owo-ui-components")
-			credentials {
-				username = (findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR") ?: "") as String
-				password = (findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN") ?: "") as String
-			}
+			name = "PagesMaven"
+			url = uri(findProperty("pagesMavenDir") ?: layout.buildDirectory.dir("pages-maven").get().asFile)
 		}
 	}
 }

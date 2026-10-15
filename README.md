@@ -58,7 +58,8 @@ Commands.literal("mymod").then(Commands.literal("playground")
     }));
 ```
 
-3. Add `"rhettl-owo-dark-ui": ">=0.1.0"` to `depends` in your `fabric.mod.json`.
+3. Add `"rhettl-owo-dark-ui": "0.1.x"` to `depends` in your `fabric.mod.json`
+   (see [Versions across mods](#versions-across-mods)).
 
 Ordering: Fabric does not guarantee which mod's client initializer runs first. That
 is fine here: `Themes.set` and `PlaygroundTabs.register` only store values, and
@@ -66,11 +67,13 @@ screens read them when they open.
 
 ## Playground
 
-The playground is a handled screen with one tab per component page. It exists so
-components are built and judged in-game, at the real GUI scale, against the
-player's real inventory, before any full screen depends on them. The library
-contributes **Frames & Tabs**, **Inventory**, **List Well**, and **Theme**; your
-pages appear alongside them.
+The playground is optional. A project that only uses the components as they are
+does not need one. It is a handled screen with one tab per page, and it is most
+useful when you build compound structures: a card made of a frame, a list, and a
+quantity selector, or a whole panel of a shop. There you can try layouts in-game,
+at the real GUI scale and against the player's real inventory, before a full
+screen depends on them. The library contributes **Frames & Tabs**, **Inventory**,
+**List Well**, and **Theme**; your pages appear alongside them.
 
 A page implements `PlaygroundTab`:
 
@@ -103,14 +106,17 @@ public final class MyWalletTab implements PlaygroundTab {
 
 ### For AI coding agents
 
-When you work on UI in a project that uses this library, **use the playground**:
+When you work on UI in a project that uses this library:
 
-1. **Make sure the project has a playground instance.** If it has no command or
-   other trigger that calls `Playground.open`, add one (permission level 2,
-   server side), and register its pages in the client initializer.
-2. **Add a playground page for each new reusable component before using it in a
-   real screen.** Show the normal state and the edge cases: empty, long text,
-   zero or maximum values, disabled, hovered and focused.
+1. **Suggest a playground when you build compound structures.** Combining
+   several components into a reusable card, row, or panel is where a playground
+   page pays off. If the project has no playground yet, propose adding one: a
+   permission-level-2 trigger that calls `Playground.open`, and page registration
+   in the client initializer. Using the library's components as they are does
+   not need one.
+2. **When a project has a playground, give each new reusable composition a page
+   before a real screen uses it.** Show the normal state and the edge cases:
+   empty, long text, zero or maximum values, disabled, hovered and focused.
 3. **Compose screens from tested components.** Real screens and playground pages
    both depend on the components; neither depends on the other. Do not make a
    screen import a playground class.
@@ -120,8 +126,8 @@ When you work on UI in a project that uses this library, **use the playground**:
    follow the active theme. Add a palette role here rather than hard-coding a
    color downstream.
 6. **Report what you verified.** A passing build does not show how a layout
-   renders. Ask the user to open the playground in `runClient` and check the
-   page, ideally at their usual GUI scale.
+   renders. Ask the user to check it in `runClient`, in the playground if there
+   is one, ideally at their usual GUI scale.
 
 ## Theming
 
@@ -229,24 +235,15 @@ ship the same path, load order decides which one wins.
 
 ## Using it in a project
 
-The jar is published to GitHub Packages. GitHub requires a token to read packages,
-even public ones, so set credentials once in `~/.gradle/gradle.properties`:
-
-```properties
-gpr.user=<github-username>
-gpr.key=<classic PAT with read:packages>
-```
+Releases and snapshots are published to a Maven repository on GitHub Pages,
+https://rhettl.github.io/owo-dark-ui/. It is public and needs no token or
+credentials.
 
 ```kotlin
 repositories {
     maven("https://maven.wispforest.io/releases/")
-    maven {
-        name = "GitHubPackages-owo-dark-ui"
-        url = uri("https://maven.pkg.github.com/rhettl/owo-ui-components")
-        credentials {
-            username = (findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR") ?: "") as String
-            password = (findProperty("gpr.key") ?: System.getenv("GPR_TOKEN") ?: System.getenv("GITHUB_TOKEN") ?: "") as String
-        }
+    maven("https://rhettl.github.io/owo-dark-ui/") {
+        content { includeGroup("io.github.rhettl") }
     }
 }
 
@@ -257,17 +254,14 @@ dependencies {
 }
 ```
 
-If several mods in a pack bundle this library, Fabric Loader loads only one copy:
-the highest version.
-
 ### Developing against a local checkout
 
 Clone this repository next to the consuming project, then substitute it in the
-consumer's `settings.gradle.kts`. Gradle then builds from source and skips the
-remote repository entirely, so no token is needed:
+consumer's `settings.gradle.kts`. Gradle then builds from source instead of
+downloading, so library changes show up in the consumer immediately:
 
 ```kotlin
-val owoDarkUi = file("../owo-ui-components")
+val owoDarkUi = file("../owo-dark-ui")
 if (owoDarkUi.exists()) {
     includeBuild(owoDarkUi) {
         dependencySubstitution {
@@ -278,6 +272,39 @@ if (owoDarkUi.exists()) {
 ```
 
 `./gradlew publishToMavenLocal` also works, if the consumer declares `mavenLocal()`.
+
+### Versions across mods
+
+Mods often bundle each other: a modpack mod (the parent) bundles a feature mod
+(the child), and both may bundle this library. Fabric Loader then loads **one**
+copy of the library for the whole game: the highest version that satisfies every
+mod's `depends` range. Every mod runs against that one copy, whichever version it
+was compiled against.
+
+That causes two kinds of failure:
+
+- **The chosen version is too new for a mod.** The child was built against 0.1.x
+  and the parent bundles 0.2.0, so Loader loads 0.2.0. While the version is `0.x`,
+  a minor release may remove or change API. The child then fails only when it
+  reaches the changed code, with `NoSuchMethodError` or `NoClassDefFoundError`,
+  possibly long after startup.
+- **No version satisfies every range.** Loader refuses to start and names the
+  conflicting mods. This is the better failure: it is immediate and explicit.
+
+To stay safe:
+
+1. **Declare a bounded range** in `fabric.mod.json`, so a mismatch fails at
+   launch instead of mid-game. Use `"rhettl-owo-dark-ui": "0.1.x"` while on 0.1;
+   it accepts `0.1.0-SNAPSHOT` and every 0.1 release, and rejects 0.2. From 1.0
+   on, use `"1.x"`. Avoid `">=0.1.0"`: it has no upper bound, and it also
+   rejects `0.1.0-SNAPSHOT`, because a snapshot sorts below its release.
+2. **Keep parent and child on the same library version.** When you bump it in
+   the child, bump it in the parent in the same change.
+3. **A parent that does not call the library itself should not bundle it.** Let
+   the child bring it. A parent that does call it declares its own dependency and
+   range, as above.
+4. **Do not ship snapshots in releases.** A snapshot can change under the same
+   version string; release builds should use a tagged version.
 
 ## Versioning
 
