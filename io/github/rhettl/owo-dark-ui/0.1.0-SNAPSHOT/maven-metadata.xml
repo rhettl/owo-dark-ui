@@ -3,32 +3,32 @@
   <groupId>io.github.rhettl</groupId>
   <artifactId>owo-dark-ui</artifactId>
   <versioning>
-    <lastUpdated>20261015055708</lastUpdated>
+    <lastUpdated>20261015061026</lastUpdated>
     <snapshot>
-      <timestamp>20261015.055708</timestamp>
-      <buildNumber>2</buildNumber>
+      <timestamp>20261015.061026</timestamp>
+      <buildNumber>3</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
-        <extension>jar</extension>
-        <value>0.1.0-20261015.055708-2</value>
-        <updated>20261015055708</updated>
-      </snapshotVersion>
-      <snapshotVersion>
         <classifier>sources</classifier>
         <extension>jar</extension>
-        <value>0.1.0-20261015.055708-2</value>
-        <updated>20261015055708</updated>
-      </snapshotVersion>
-      <snapshotVersion>
-        <extension>pom</extension>
-        <value>0.1.0-20261015.055708-2</value>
-        <updated>20261015055708</updated>
+        <value>0.1.0-20261015.061026-3</value>
+        <updated>20261015061026</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>module</extension>
-        <value>0.1.0-20261015.055708-2</value>
-        <updated>20261015055708</updated>
+        <value>0.1.0-20261015.061026-3</value>
+        <updated>20261015061026</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.1.0-20261015.061026-3</value>
+        <updated>20261015061026</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.1.0-20261015.061026-3</value>
+        <updated>20261015061026</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
