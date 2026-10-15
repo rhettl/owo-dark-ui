@@ -1,0 +1,14 @@
+{
+  "texture": "rhettl-owo-dark-ui:textures/gui/skin/outset_frame_gold_square.png",
+  "corner_patch_size": {
+    "width": 3,
+    "height": 3
+  },
+  "center_patch_size": {
+    "width": 10,
+    "height": 10
+  },
+  "texture_width": 16,
+  "texture_height": 16,
+  "repeat": false
+}

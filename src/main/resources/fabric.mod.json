@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "rhettl-owo-dark-ui",
+	"version": "${version}",
+	"name": "owo Dark UI",
+	"description": "Themeable dark owo-lib UI components: frames, wells, tabs, lists, inventory grids, and an in-game component playground.",
+	"authors": [
+		"RhettL"
+	],
+	"contact": {
+		"sources": "https://github.com/rhettl/owo-ui-components",
+		"issues": "https://github.com/rhettl/owo-ui-components/issues"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.rhettl.owodarkui.OwoDarkUi"
+		],
+		"client": [
+			"io.github.rhettl.owodarkui.OwoDarkUiClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"owo-lib": ">=0.12.15"
+	},
+	"custom": {
+		"modmenu": {
+			"badges": ["library"]
+		}
+	}
+}
